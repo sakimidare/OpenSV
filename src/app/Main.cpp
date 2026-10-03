@@ -2,6 +2,7 @@
 
 #include <juce_gui_extra/juce_gui_extra.h>
 
+#include <cmath>
 #include <memory>
 
 namespace sv
@@ -24,6 +25,21 @@ public:
 
     void initialise(const juce::String& commandLine) override
     {
+#if JUCE_LINUX
+        const auto requestedScale = juce::SystemStats::getEnvironmentVariable("OPENSV_SCALE", {}).trim();
+        if (requestedScale.isNotEmpty())
+        {
+            const auto scale = requestedScale.getDoubleValue();
+            if (std::isfinite(scale) && scale >= 0.5 && scale <= 4.0)
+            {
+                juce::Desktop::getInstance().setGlobalScaleFactor(static_cast<float>(scale));
+            }
+            else
+            {
+                juce::Logger::writeToLog("Ignoring invalid OPENSV_SCALE value '" + requestedScale + "'; expected a number from 0.5 to 4.0.");
+            }
+        }
+#endif
         window = std::make_unique<MainWindow>();
         openFromCommandLine(commandLine);
     }

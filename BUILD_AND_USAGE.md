@@ -70,6 +70,12 @@ cmake --build build/linux-release --target OpenSV --parallel 4
 
 已有仓库时，先在仓库根目录执行 `git submodule update --init --recursive`。Linux 与 Windows 使用不同构建目录，不可共用 CMake 缓存。运行编辑器需要可用的图形会话和音频设备；中文显示需要系统安装中文字体。
 
+Wayland 会话下程序通过 XWayland 运行。如果自动检测的界面缩放不合适，可以通过 `OPENSV_SCALE` 设置 0.5–4.0 范围内的缩放比例，例如使用 150% 缩放：
+
+```bash
+OPENSV_SCALE=1.5 ./build/linux-release/OpenSV_artefacts/Release/OpenSV
+```
+
 ## 首次使用
 
 声库和发音词典不随仓库提供，需要自行准备可用的 `voice.nofs` 和 `clf-data` 目录。
